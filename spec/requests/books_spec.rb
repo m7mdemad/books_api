@@ -4,7 +4,7 @@ require "rails_helper"
 describe "Books API", type: :request do
     describe "GET /api/v1/books" do
         before do
-            author = FactoryBot.create(:author, first_name: "First", last_name: "Last", age: "1")
+            author = FactoryBot.create(:author, first_name: "First", last_name: "Last", age: "120")
             FactoryBot.create(:book, title: "Crime and Punishment", author_id: author.id)
             FactoryBot.create(:book, title: "Notes from Underground", author_id: author.id)
         end
@@ -12,7 +12,23 @@ describe "Books API", type: :request do
             get "/api/v1/books"
     
             expect(response).to have_http_status(:success)
-            expect(JSON.parse(response.body).size).to eq(2)
+            expect(response_body.size).to eq(2)
+            expect(response_body).to eq(
+                [
+                    {
+                        "id" => 1,
+                        "title" => "Crime and Punishment",
+                        "author_name" => "First Last",
+                        "author_age" => 120
+                    },
+                    {
+                        "id" => 2,
+                        "title" => "Notes from Underground",
+                        "author_name" => "First Last",
+                        "author_age" => 120
+                    }
+                ]
+            )
         end
     end
 
@@ -26,6 +42,14 @@ describe "Books API", type: :request do
             }.to change { Book.count }.from(0).to(1)
 
             expect(response).to have_http_status(:created)
+            expect(response_body).to eq(
+                {
+                    "id" => 1,
+                    "title" => "1919",
+                    "author_name" => "Ahmed Morad",
+                    "author_age" => 30
+                }
+            )
         end
 
         it "create new book with invalid field" do
