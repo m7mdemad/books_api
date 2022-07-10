@@ -30,6 +30,40 @@ describe "Books API", type: :request do
                 ]
             )
         end
+
+        it "return subset using limit" do
+            get "/api/v1/books", params: { limit: 1 }
+
+            expect(response).to have_http_status(:success)
+            expect(response_body.size).to eq(1)
+            expect(response_body).to eq(
+                [
+                    {
+                        "id" => 1,
+                        "title" => "Crime and Punishment",
+                        "author_name" => "First Last",
+                        "author_age" => 120
+                    }
+                ]
+            )
+        end
+
+        it "return subset using limit and offset" do
+            get "/api/v1/books", params: { limit: 1, offset: 1 }
+
+            expect(response).to have_http_status(:success)
+            expect(response_body.size).to eq(1)
+            expect(response_body).to eq(
+                [
+                    {
+                        "id" => 2,
+                        "title" => "Notes from Underground",
+                        "author_name" => "First Last",
+                        "author_age" => 120
+                    }
+                ]
+            )
+        end
     end
 
     describe "POST /api/v1/books" do
