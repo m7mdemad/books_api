@@ -9,6 +9,10 @@ class Api::V1::BooksController < ApplicationController
   def create
     author = Author.create!(author_params)
     book = Book.new(book_params.merge(author_id: author.id))
+    
+    # Practicing how to create an active job. 
+    # TODO: Create the service and uncomment this line
+    # UpdateSkuJob.perform_later(book_params[:title])
 
     if book.save
       render json: BookRepresenter.new(book).as_json, status: :created
