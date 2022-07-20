@@ -72,7 +72,7 @@ describe "Books API", type: :request do
                 post "/api/v1/books", params: { 
                     book: {title: "1919"},
                     author: {first_name: "Ahmed", last_name: "Morad", age: "30" }
-                }
+                }, headers: { "Authorization" => "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSJ9.M1vu6qDej7HzuSxcfbE6KAMekNUXB3EWtxwS0pg4UGg" }
             }.to change { Book.count }.from(0).to(1)
 
             expect(response).to have_http_status(:created)
